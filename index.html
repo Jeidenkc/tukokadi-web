@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TukoKadi — The Kadi table, in your pocket</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #14140F;
+    --ink-soft: #1D1D16;
+    --felt: #1B7A4B;
+    --felt-deep: #12492E;
+    --red: #C8102E;
+    --gold: #E8B94B;
+    --cream: #F3EEDD;
+    --cream-dim: #C9C4B2;
+    box-sizing: border-box;
+    padding-top: env(safe-area-inset-top, 0px);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+  html { scroll-padding-top: env(safe-area-inset-top, 0px); }
+  * { box-sizing: inherit; }
+  body {
+    margin: 0;
+    background: var(--ink);
+    color: var(--cream);
+    font-family: 'Inter', sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1, h2, h3, .display {
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  a { color: inherit; }
+  img { max-width: 100%; }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 22px 0;
+  }
+  .wordmark {
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.25rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .wordmark .dot { color: var(--gold); }
+  .nav-links {
+    display: flex;
+    gap: 28px;
+    font-size: 0.95rem;
+    color: var(--cream-dim);
+  }
+  .nav-links a:hover { color: var(--cream); }
+
+  .hero {
+    position: relative;
+    overflow: hidden;
+    background:
+      radial-gradient(ellipse 900px 500px at 15% -10%, rgba(232,185,75,0.16), transparent 60%),
+      radial-gradient(ellipse 700px 500px at 100% 10%, rgba(200,16,46,0.14), transparent 55%),
+      linear-gradient(180deg, var(--ink) 0%, var(--ink-soft) 100%);
+    padding-bottom: 40px;
+  }
+  .hero-suits {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.5;
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    align-items: center;
+    gap: 40px;
+    padding-top: 48px;
+    position: relative;
+  }
+  @media (max-width: 860px) {
+    .hero-grid { grid-template-columns: 1fr; padding-top: 20px; }
+  }
+  .eyebrow-suits {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 22px;
+    font-size: 1.1rem;
+    color: var(--cream-dim);
+  }
+  .eyebrow-suits span:nth-child(1) { color: var(--red); }
+  .eyebrow-suits span:nth-child(3) { color: var(--red); }
+
+  .hero h1 {
+    font-size: clamp(2.6rem, 6vw, 4.4rem);
+    line-height: 1.02;
+    color: var(--cream);
+  }
+  .hero h1 em {
+    font-style: normal;
+    color: var(--gold);
+  }
+  .hero p.lede {
+    margin-top: 22px;
+    font-size: 1.15rem;
+    line-height: 1.6;
+    color: var(--cream-dim);
+    max-width: 46ch;
+  }
+
+  .cta-row {
+    margin-top: 34px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 15px 26px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 1rem;
+    text-decoration: none;
+    border: 1px solid transparent;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--ink);
+  }
+  .btn-primary[aria-disabled="true"] {
+    background: #4a4534;
+    color: var(--cream-dim);
+    cursor: default;
+  }
+  .btn-ghost {
+    border-color: rgba(243,238,221,0.28);
+    color: var(--cream);
+  }
+  .cta-note {
+    font-size: 0.85rem;
+    color: var(--cream-dim);
+    width: 100%;
+  }
+
+  .phone-stage {
+    display: flex;
+    justify-content: center;
+  }
+  .phone {
+    width: 260px;
+    height: 540px;
+    border-radius: 34px;
+    background: linear-gradient(160deg, #0d3f27, var(--felt-deep) 55%, #0a2e1c);
+    border: 6px solid #0b0b08;
+    box-shadow: 0 30px 70px rgba(0,0,0,0.55), 0 0 0 1px rgba(232,185,75,0.15);
+    position: relative;
+    transform: rotate(-4deg);
+    overflow: hidden;
+  }
+  .phone::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image:
+      radial-gradient(circle at 30% 20%, rgba(255,255,255,0.05), transparent 40%);
+  }
+  .phone-header {
+    padding: 22px 18px 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--cream-dim);
+  }
+  .phone-title {
+    text-align: center;
+    margin-top: 10px;
+    font-family: 'Fraunces', serif;
+    font-weight: 600;
+    color: var(--gold);
+    font-size: 1.1rem;
+  }
+  .table-felt {
+    margin: 18px 16px 0;
+    height: 300px;
+    border-radius: 16px;
+    background: radial-gradient(ellipse at 50% 30%, #1f8a56, #0f4a2c 75%);
+    border: 2px solid rgba(232,185,75,0.35);
+    position: relative;
+  }
+  .mock-card {
+    position: absolute;
+    width: 46px;
+    height: 64px;
+    border-radius: 6px;
+    background: var(--cream);
+    box-shadow: 0 6px 14px rgba(0,0,0,0.4);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: 'Fraunces', serif;
+    font-weight: 700;
+    font-size: 1.1rem;
+  }
+  .mock-card.red { color: var(--red); }
+  .mock-card.blk { color: #14140F; }
+  .mock-card.c1 { top: 40px; left: 30px; transform: rotate(-10deg); }
+  .mock-card.c2 { top: 30px; left: 84px; transform: rotate(3deg); }
+  .mock-card.c3 { top: 40px; left: 138px; transform: rotate(14deg); }
+  .mock-card.c4 { bottom: 30px; left: 108px; transform: rotate(-4deg) scale(1.08); box-shadow: 0 10px 20px rgba(0,0,0,0.5); }
+  .phone-wallet {
+    margin: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.8rem;
+    color: var(--cream-dim);
+  }
+  .phone-wallet .amt { color: var(--gold); font-weight: 600; }
+
+  section { padding: 84px 0; }
+  .section-head {
+    max-width: 60ch;
+    margin-bottom: 48px;
+  }
+  .section-head h2 {
+    font-size: clamp(1.8rem, 3.4vw, 2.4rem);
+    color: var(--cream);
+  }
+  .section-head p {
+    margin-top: 14px;
+    color: var(--cream-dim);
+    line-height: 1.6;
+    font-size: 1.05rem;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: rgba(243,238,221,0.1);
+    border: 1px solid rgba(243,238,221,0.1);
+    border-radius: 18px;
+    overflow: hidden;
+  }
+  @media (max-width: 700px) {
+    .features { grid-template-columns: 1fr; }
+  }
+  .feature {
+    background: var(--ink-soft);
+    padding: 34px 30px;
+  }
+  .feature .mark {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.3rem;
+    margin-bottom: 18px;
+  }
+  .feature h3 {
+    font-size: 1.2rem;
+    color: var(--cream);
+    margin-bottom: 10px;
+  }
+  .feature p {
+    color: var(--cream-dim);
+    line-height: 1.6;
+    font-size: 0.98rem;
+    margin: 0;
+  }
+  .mark.gold { background: rgba(232,185,75,0.16); color: var(--gold); }
+  .mark.red { background: rgba(200,16,46,0.18); color: #ef5f76; }
+  .mark.green { background: rgba(27,122,75,0.3); color: #5fd396; }
+  .mark.cream { background: rgba(243,238,221,0.12); color: var(--cream); }
+
+  .how {
+    background: var(--ink-soft);
+    border-top: 1px solid rgba(243,238,221,0.08);
+    border-bottom: 1px solid rgba(243,238,221,0.08);
+  }
+  .steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 30px;
+  }
+  @media (max-width: 760px) {
+    .steps { grid-template-columns: 1fr; }
+  }
+  .step .suit {
+    font-size: 1.4rem;
+    color: var(--red);
+    margin-bottom: 14px;
+  }
+  .step h3 { font-size: 1.1rem; color: var(--cream); margin-bottom: 8px; }
+  .step p { color: var(--cream-dim); font-size: 0.98rem; line-height: 1.6; margin: 0; }
+
+  .strip {
+    display: flex;
+    gap: 18px;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+  .strip::-webkit-scrollbar { display: none; }
+  .shot {
+    flex: 0 0 auto;
+    width: 180px;
+    height: 330px;
+    border-radius: 18px;
+    border: 2px dashed rgba(243,238,221,0.25);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: var(--cream-dim);
+    font-size: 0.85rem;
+    padding: 20px;
+    background: radial-gradient(circle at 50% 30%, rgba(27,122,75,0.18), transparent 70%);
+  }
+
+  footer {
+    padding: 70px 0 50px;
+    text-align: center;
+  }
+  footer h2 {
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    max-width: 20ch;
+    margin: 0 auto;
+  }
+  footer p {
+    color: var(--cream-dim);
+    margin-top: 16px;
+  }
+  footer .cta-row { justify-content: center; }
+  .foot-meta {
+    margin-top: 56px;
+    padding-top: 26px;
+    border-top: 1px solid rgba(243,238,221,0.1);
+    display: flex;
+    justify-content: space-between;
+    color: var(--cream-dim);
+    font-size: 0.85rem;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  @media (prefers-reduced-motion: no-preference) {
+    .phone { transition: transform 0.4s ease; }
+  }
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="wrap">
+    <nav>
+      <div class="wordmark">Tuko<span class="dot">Kadi</span></div>
+      <div class="nav-links">
+        <a href="#how">How it plays</a>
+        <a href="#features">Features</a>
+      </div>
+    </nav>
+
+    <div class="hero-grid">
+      <div>
+        <div class="eyebrow-suits"><span>♠</span><span>♥</span><span>♦</span><span>♣</span></div>
+        <h1>The Kadi table,<br><em>right in your pocket.</em></h1>
+        <p class="lede">TukoKadi brings the card game everyone grew up playing straight to your phone — call your Rafiki in for a real match, or warm up against the bot when no one's online.</p>
+        <div class="cta-row">
+          <a class="btn btn-primary" aria-disabled="true" href="#" onclick="return false;">Download for Android</a>
+          <a class="btn btn-ghost" href="#how">See how it plays</a>
+          <div class="cta-note">APK link coming soon</div>
+        </div>
+      </div>
+
+      <div class="phone-stage">
+        <div class="phone">
+          <div class="phone-header">
+            <span>9:41</span>
+            <span>●●●</span>
+          </div>
+          <div class="phone-title">Rafiki Table</div>
+          <div class="table-felt">
+            <div class="mock-card c1 red">Q♥</div>
+            <div class="mock-card c2 blk">K♠</div>
+            <div class="mock-card c3 red">J♦</div>
+            <div class="mock-card c4 blk">A♣</div>
+          </div>
+          <div class="phone-wallet">
+            <span>Wallet</span>
+            <span class="amt">1,240 kadi gold</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<section id="features">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>Built around the way Kadi actually gets played</h2>
+      <p>Not a generic card app with Kadi rules bolted on — every feature answers something that happens at a real table.</p>
+    </div>
+    <div class="features">
+      <div class="feature">
+        <div class="mark green">🤝</div>
+        <h3>Play with your Rafiki</h3>
+        <p>Invite a friend straight into a live match over a real-time connection — no waiting on turns to sync, no lag between plays.</p>
+      </div>
+      <div class="feature">
+        <div class="mark red">🤖</div>
+        <h3>Practice against the bot</h3>
+        <p>No one online? The built-in bot plays a proper hand, so you can sharpen your strategy before the next real match.</p>
+      </div>
+      <div class="feature">
+        <div class="mark gold">🎁</div>
+        <h3>Daily gifts</h3>
+        <p>Open the app each day for a small top-up to your wallet — a reason to come back beyond just the next match.</p>
+      </div>
+      <div class="feature">
+        <div class="mark cream">💰</div>
+        <h3>Your own wallet</h3>
+        <p>Track your kadi gold across matches and gifts, and see exactly what you've earned at a glance.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="how" class="how">
+  <div class="wrap">
+    <div class="section-head">
+      <h2>From open app to first hand</h2>
+      <p>Three things stand between you and a match.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="suit">♠</div>
+        <h3>Open the table</h3>
+        <p>Launch TukoKadi and pick your mode — a Rafiki match, or a hand against the bot.</p>
+      </div>
+      <div class="step">
+        <div class="suit">♥</div>
+        <h3>Get dealt in</h3>
+        <p>Cards deal out automatically, gold on the line if you've got it staked.</p>
+      </div>
+      <div class="step">
+        <div class="suit">♦</div>
+        <h3>Play it out</h3>
+        <p>Standard Kadi rules — match suit or rank, stack your specials, and try to be first to empty your hand.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h2>A look at the table</h2>
+      <p>Screenshots land here once a build is ready to show off.</p>
+    </div>
+    <div class="strip">
+      <div class="shot">Home screen</div>
+      <div class="shot">Rafiki match in progress</div>
+      <div class="shot">Wallet &amp; daily gift</div>
+      <div class="shot">Win screen</div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <h2>Call your Rafiki. Deal the cards.</h2>
+    <p>TukoKadi is in active development — the download link goes live here first.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" aria-disabled="true" href="#" onclick="return false;">Download for Android</a>
+    </div>
+    <div class="foot-meta">
+      <span>TukoKadi</span>
+      <span>Built for the Kadi table, wherever you are</span>
+    </div>
+  </div>
+</footer>
+
+</body>
+</html>
